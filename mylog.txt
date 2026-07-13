@@ -1,0 +1,5 @@
+divide_function ok
+my_function
+error: ZeroDivisionError
+Inputs: (1, 0), {}
+divide_function ok
