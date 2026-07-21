@@ -123,6 +123,7 @@ transactions = (
 @log(filename="test_log.txt")
 def divide_function_file(x, y):
     return x / y
+К проекту добавлен файл Json.
 ## Тестирование
 
 Тесты созданы в пакете tests. Модуля в пакете tests содержат тесты для каждой функции.
