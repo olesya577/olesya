@@ -1,6 +1,41 @@
 from unittest.mock import mock_open, patch
-
 from src.utils import read_json_file
+import json
+import logging
+
+
+def setup_logging(module_name: str):
+    logger = logging.getLogger(module_name)
+    logger.setLevel(logging.DEBUG)
+    file_handler = logging.FileHandler(f"logs/{module_name}.log", mode="w")
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    return logger
+
+
+utils_logger = setup_logging('utils')
+
+
+def read_json_file(file_path: str) -> list:
+    """
+     Принимает на вход путь до JSON-файла и возвращает список словарей с данными о финансовых транзакциях.
+    Если файл пустой, содержит не список или не найден, функция возвращает пустой список.
+    """
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            transactions_list = json.load(file)
+            if isinstance(transactions_list, list):
+                utils_logger.info(f"Файл {file_path} успешно прочитан.")
+                return transactions_list
+            else:
+                utils_logger.warning(f"Содержимое файла {file_path} не является списком.")
+    except FileNotFoundError:
+        utils_logger.error(f"Файл {file_path} не найден.")
+    except json.JSONDecodeError:
+        utils_logger.error(f"Ошибка декодирования JSON в файле {file_path}.")
+    return []
+
 
 mock_file = mock_open(
     read_data='[{"id": 441945886, "state": "EXECUTED", "date": "2019-08-26T10:50:58.294041",'
