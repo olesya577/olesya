@@ -47,9 +47,9 @@ def divide_function_file(x: float, y: float) -> float:
         divide_function_file(x, y)
 
     # Проверяем, что файл создан и содержит ожидаемое сообщение
-    with open(log_file, 'r') as f:
+    with open(log_file, "r") as f:
         content = f.read()
-        assert expected_out in content
+        assert "expected_output" in content
 
     # Удаляем файл после теста
     if os.path.exists(log_file):
