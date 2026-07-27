@@ -3,6 +3,7 @@ import pandas as pd
 import csv
 
 
+
 def read_from_csv(file_path: str) -> List[Dict[str, Any]]:
     """
     Считывает финансовые операции из CSV-файла и возвращает список словарей.
@@ -20,7 +21,6 @@ def read_from_csv(file_path: str) -> List[Dict[str, Any]]:
     except Exception as e:
         print(f"Ошибка при чтении CSV: {e}")
     return transactions
-
 
 
 data = read_from_csv("transactions.csv")
@@ -46,6 +46,5 @@ def read_excel_file(file_path: str) -> List[Dict[str, Any]]:
     return transactions
 
 
-
-data = read_excel_file("transactions_excel.xlsx")
-print(data)
+dates = read_excel_file("transactions_excel.xlsx")
+print(dates)
