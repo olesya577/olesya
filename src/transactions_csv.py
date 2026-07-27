@@ -3,7 +3,6 @@ import pandas as pd
 import csv
 
 
-
 def read_from_csv(file_path: str) -> List[Dict[str, Any]]:
     """
     Считывает финансовые операции из CSV-файла и возвращает список словарей.
