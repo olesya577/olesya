@@ -18,5 +18,7 @@ def mask_account_card(account_card: str) -> str:
 
 def get_date(date: str) -> str:
     """Функция преобразует дату в формат 'DD.MM.YYYY'"""
-    date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f")
-    return date.strftime("%d.%m.%Y")
+    year = date[:4]
+    month = date[5:7]
+    day = date[8:10]
+    return f"{day}.{month}.{year}"

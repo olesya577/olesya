@@ -1,10 +1,14 @@
 from typing import Any, Dict, List
 
 
-def filter_by_currency(transactions: List[Dict[str, Any]], currency_code: str) -> iter:
+def filter_by_currency(transactions: List[Dict[str, Any]], currency_code: str, from_json: bool = True) -> iter:
     for transaction in transactions:
-        if transaction["operationAmount"]["currency"]["code"] == currency_code:
-            yield transaction
+        if from_json:
+            if transaction["operationAmount"]["currency"]["code"] == currency_code:
+                yield transaction
+        else:
+            if transaction["currency_code"] == currency_code:
+                yield transaction
 
 
 def transaction_descriptions(transactions: List[Dict[str, Any]]) -> iter:

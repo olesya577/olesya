@@ -4,12 +4,12 @@ def filter_by_state(my_list_dir: list, state="EXECUTED") -> list:
     соответствует указанному значению."""
     filtered_list = []
     for transaction in my_list_dir:
-        if transaction["state"] == state:
+        if transaction.get("state") == state:
             filtered_list.append(transaction)
     return filtered_list
 
 
-def sort_by_date(my_list_dir: list,reverse) -> list:
+def sort_by_date(my_list_dir: list, reverse) -> list:
     """Функция sort_by_date, которая принимает список словарей и необязательный параметр, задающий
     порядок сортировки (по умолчанию — убывание). Функция должна возвращать новый список, отсортированный по
     дате (date)."""

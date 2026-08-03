@@ -26,7 +26,7 @@ def converting_amount_rubles(transaction: Dict[str, Dict[str, Dict[str, str]]]) 
 
     elif code_transaction in ["USD", "EUR"]:
         to = "RUB"
-        from_= code_transaction
+        from_ = code_transaction
         amount = transaction['operationAmount']['amount']
 
         url = f"https://api.apilayer.com/exchangerates_data/convert?to={to}&from={from_}&amount={amount}"

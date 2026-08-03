@@ -22,8 +22,6 @@ def read_from_csv(file_path: str) -> List[Dict[str, Any]]:
     return transactions
 
 
-data = read_from_csv("transactions.csv")
-print(data)
 
 
 def read_excel_file(file_path: str) -> List[Dict[str, Any]]:
@@ -45,5 +43,4 @@ def read_excel_file(file_path: str) -> List[Dict[str, Any]]:
     return transaction
 
 
-dates = read_excel_file("transactions_excel.xlsx")
-print(dates)
+
