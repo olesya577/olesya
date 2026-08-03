@@ -20,7 +20,7 @@ def test_filter_by_currency(transactions: List[Dict[str, Any]], currency_code: s
 
 
 @pytest.mark.parametrize(
-    "transactions, expected_descriptions",
+    "transaction, expected_descriptions",
     [
         (
             [  # Список транзакций
@@ -41,8 +41,8 @@ def test_filter_by_currency(transactions: List[Dict[str, Any]], currency_code: s
         ([], []),  # Пустой список транзакций
     ],
 )
-def test_transaction_descriptions(transactions, expected_descriptions):
-    result = list(transaction_descriptions(transactions))
+def test_transaction_descriptions(transaction, expected_descriptions):
+    result = list(transaction_descriptions(transaction))
     assert result == expected_descriptions
 
 
