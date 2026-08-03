@@ -69,7 +69,7 @@ def sample_dates():
         {"id": 4, "state": "CANCELED", "date": "2023-01-15T10:00:00"},
     ]
 
-import pytest
+
 
 @pytest.fixture
 def transactions():

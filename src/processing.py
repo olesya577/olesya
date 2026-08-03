@@ -3,15 +3,15 @@ def filter_by_state(my_list_dir: list, state="EXECUTED") -> list:
     'EXECUTED'). Функция возвращает новый список словарей, содержащий только те словари, у которых ключ state
     соответствует указанному значению."""
     filtered_list = []
-    for dir in my_list_dir:
-        if dir["state"] == state:
-            filtered_list.append(dir)
+    for transaction in my_list_dir:
+        if transaction["state"] == state:
+            filtered_list.append(transaction)
     return filtered_list
 
 
-def sort_by_date(my_list_dir: list) -> list:
+def sort_by_date(my_list_dir: list,reverse) -> list:
     """Функция sort_by_date, которая принимает список словарей и необязательный параметр, задающий
     порядок сортировки (по умолчанию — убывание). Функция должна возвращать новый список, отсортированный по
     дате (date)."""
-    sorted_list = sorted(my_list_dir, key=lambda employee: employee["date"], reverse=True)
+    sorted_list = sorted(my_list_dir, key=lambda employee: employee["date"], reverse=reverse)
     return sorted_list

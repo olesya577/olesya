@@ -22,7 +22,7 @@ def test_key_error_handling(mock_get: Mock) -> None:
 
 
 @patch("src.external_api.requests.get")
-def test_transaction_in_rubles(sels) -> None:
+def test_transaction_in_rubles(transactions) -> None:
     transaction = {"operationAmount": {"amount": "31957.58", "currency": {"code": "RUB"}}}
     result = converting_amount_rubles(transaction)
     assert result == 31957.58, f"Expected 31957.58, but got {result}"

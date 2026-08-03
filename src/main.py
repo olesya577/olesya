@@ -1,11 +1,19 @@
 import re
-from typing import List, Dict, Any, Hashable
+from typing import List, Dict, Any
 from collections import Counter
 import os
 from src.utils import read_json_file
 from src.processing import filter_by_state, sort_by_date
 from src.transactions_csv import read_from_csv, read_excel_file
-import pandas as pd
+# from tests.test_processing import (
+#     test_filter_by_executed_state,
+#     test_filter_by_canceled_state,
+#     test_filter_by_pending_state,
+#     test_sort_descending_default,
+# )
+
+from src.widget import get_date
+from src.masks import get_mask_account
 
 # Получение текущего рабочего каталога
 current_directory = os.getcwd()
@@ -72,8 +80,7 @@ def main():
     связывает функциональности между собой.
     """
 
-
-transactions_ = []
+transaction = []
 sample_data = []
 operations_sort_data = []
 currency_key_path = []
@@ -89,18 +96,18 @@ while True:
     users_choice = (input("\nВаш выбор: ")).strip()
     if users_choice == "1":
         print("Для обработки выбран JSON-файл.")
-        file_path = "data/operations.json"
-        transactions_ = read_json_file(file_path)
+        file_path = "../data/operations.json"
+        transactions = read_json_file(file_path)
         break
     elif users_choice == "2":
         print("Для обработки выбран CSV-файл.")
-        path_csv = "data/transactions.csv"
-        transactions_ = read_from_csv(path_csv)
+        path_csv = "../data/transactions.csv"
+        transactions = read_from_csv(path_csv)
         break
     elif users_choice == "3":
         print("Для обработки выбран XLSX-файл.")
-        path_excel = "data/transactions_excel.xlsx"
-        transactions_ = read_excel_file(path_excel)
+        path_excel = "../data/transactions_excel.xlsx"
+        transactions = read_excel_file(path_excel)
         break
     else:
         print("\nНеверный выбор. Выберите 1,2 или 3")
@@ -111,12 +118,12 @@ while True:
         "\nВведите статус, по которому необходимо выполнить фильтрацию.\n"
         "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING"
     )
-    status = ["EXECUTED", "CANCELED", "PENDING"]
+    state = ["EXECUTED", "CANCELED", "PENDING"]
     user_status = (input("\nВаш выбор: ")).strip().upper()
-    if user_status in status:
+    if user_status in state:
         status_filter = user_status
         print(f"Был выбран статус: {status_filter}")
-        operations_sort_state = filter_by_state(transactions_, status_filter)
+        operations_sort_state = filter_by_state(transaction, status_filter)
         break
     else:
         print(f'Статус операции "{user_status}" недоступен')
@@ -133,11 +140,11 @@ while True:
         )
         if order_choice == "по возрастанию":
             order_filter = False
-            operations_sort_data = sort_by_date(sample_data)
+
             break
         elif order_choice == "по убыванию":
             order_filter = True
-            operations_sort_data = sort_by_date(sample_data)
+
             break
     elif sort_by_date_choice == "нет":
         break
@@ -155,32 +162,25 @@ if rub_filter == "да":
         currency_key_path = ["currency_code"]  # Фактический ключ для CSV
     elif users_choice == "3":  # XLSX
         currency_key_path = ["currency_code"]  # фактический ключ для XLSX
-    transactions_rubles = list(filter_by_state(sample_data, currency_key_path))
+    transaction_rubles = filter_by_state(transaction, currency_key_path)
     word_filter = input("Отфильтровать список транзакций по определенному слову в описании? Да/Нет\n").strip().lower()
     if word_filter == "да":
-        search_word = input("Введите слово для фильтрации транзакций по описанию: ").strip()
-        filtered_transactions = process_bank_search(transactions_rubles, search_word)
+        search_word = input("Введите слово для фильтрации транзакций по описанию: ")
+        filtered_transactions = process_bank_search(transaction_rubles, search_word)
     else:
-        filtered_transactions = transactions_rubles
+        filtered_transactions = transaction_rubles
 else:
-    filtered_transactions = sample_data
+    filtered_transactions = sort_by_date(sample_data,reverse=order_filter)
+    print("\nРаспечатываю итоговый список транзакций...")
+    print(f"\nВсего банковских операций в выборке: {len(filtered_transactions)}\n")
+for transaction in filtered_transactions:
+    date = get_date(transaction["date"])
+    description = transaction["description"]
+    from_account = get_mask_account(transaction.get("from", ""))
+    to_account = get_mask_account(transaction.get("to", ""))
+    amount = transaction["operationAmount"]["amount"]
+    currency = transaction["operationAmount"]["currency"]["name"]
 
-print("\nРаспечатываю итоговый список транзакций...")
-
-
-def get_card_data(transaction_lst: list[dict[Hashable, Any]]):
-    """
-      Принимает список словарей, и отдает список словарей с данными транзакций из карт,
-     где ключи: "last_digits"==последние 4 цифры карты, "total_spent"== общая сумма расходов,
-    "cashback" ==кешбэк (1 рубль на каждые 100 рублей)
-    """
-    # cards_d = []
-    df = pd.DataFrame(transaction_lst)
-    if "Номер карты" in df.columns:
-        print("Столбец 'Номер карты' существует")
-    else:
-        print("Столбец 'Номер карты' отсутствует")
-
-
-if not filtered_transactions:
-    print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")
+    print(f"{date} {description}")
+    print(f"{from_account} -> {to_account}")
+    print(f"Сумма: {amount} {currency}\n")

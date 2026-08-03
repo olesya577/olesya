@@ -33,16 +33,16 @@ def read_excel_file(file_path: str) -> List[Dict[str, Any]]:
     :param file_path: Путь к XLSX-файлу
     :return: Список словарей с транзакциями
     """
-    transactions = []
+    transaction = []
     try:
         df = pd.read_excel(file_path)
         # Заменяем NaN на None для корректного преобразования
-        transactions = df.where(pd.notnull(df), None).to_dict(orient="records")
+        transaction = df.where(pd.notnull(df), None).to_dict(orient="records")
     except FileNotFoundError:
         print(f"Файл не найден: {file_path}")
     except Exception as e:
         print(f"Ошибка при чтении Excel: {e}")
-    return transactions
+    return transaction
 
 
 dates = read_excel_file("transactions_excel.xlsx")
